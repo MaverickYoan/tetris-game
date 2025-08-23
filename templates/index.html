@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Tetris Game - Home{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="text-center">
+        <h2>Welcome to the Ultimate Tetris Experience! 🚀</h2>
+        <p style="font-size: 18px; color: #666; margin: 20px 0;">
+            Challenge yourself with the classic puzzle game that never gets old!
+        </p>
+    </div>
+    
+    {% if not session.username %}
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+        <div>
+            <h3>🎮 Game Features</h3>
+            <ul style="list-style: none; padding: 0; margin-top: 15px;">
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">✨ Classic Tetris gameplay</li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">🏆 Global leaderboards</li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">📊 Personal statistics tracking</li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">💾 Save your progress</li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">📱 Responsive design</li>
+                <li style="padding: 8px 0;">🎯 Multiple difficulty levels</li>
+            </ul>
+        </div>
+        
+        <div>
+            <h3>🚀 Getting Started</h3>
+            <p style="margin: 15px 0 25px 0; color: #666;">
+                Ready to test your puzzle-solving skills? Create an account to start playing and compete with players worldwide!
+            </p>
+            <div style="text-align: center;">
+                <a href="/register" class="btn" style="margin-right: 10px;">Create Account</a>
+                <a href="/login" class="btn btn-secondary">Sign In</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div style="text-align: center; margin-top: 40px;">
+        <h3>Welcome back, {{ session.username }}! 👋</h3>
+        <p style="margin: 20px 0; color: #666; font-size: 18px;">
+            Ready for another round of Tetris? Let's see if you can beat your high score!
+        </p>
+        
+        <div style="margin: 30px 0;">
+            <a href="/game" class="btn" style="font-size: 20px; padding: 15px 30px;">🎮 Start Playing</a>
+        </div>
+        
+        <div id="user-stats" style="margin-top: 40px;"></div>
+    </div>
+    
+    <script>
+        // Load user statistics
+        fetch('/api/user/stats')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const stats = data.stats;
+                    const statsContainer = document.getElementById('user-stats');
+                    
+                    const hours = Math.floor(stats.total_time_played / 3600);
+                    const minutes = Math.floor((stats.total_time_played % 3600) / 60);
+                    
+                    statsContainer.innerHTML = `
+                        <h3>📊 Your Statistics</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #4CAF50;">${stats.best_score.toLocaleString()}</div>
+                                <div style="color: #666;">Best Score</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #2196F3;">${stats.total_games_played}</div>
+                                <div style="color: #666;">Games Played</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #FF9800;">${stats.total_lines_cleared}</div>
+                                <div style="color: #666;">Lines Cleared</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #9C27B0;">${hours}h ${minutes}m</div>
+                                <div style="color: #666;">Time Played</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Failed to load user stats:', error);
+            });
+    </script>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3>🎮 How to Play</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+        <div>
+            <h4>Controls:</h4>
+            <ul style="margin-top: 10px;">
+                <li><strong>←/→ Arrow Keys:</strong> Move piece left/right</li>
+                <li><strong>↓ Arrow Key:</strong> Soft drop</li>
+                <li><strong>↑ Arrow Key:</strong> Rotate piece</li>
+                <li><strong>Spacebar:</strong> Hard drop</li>
+            </ul>
+        </div>
+        <div>
+            <h4>Scoring:</h4>
+            <ul style="margin-top: 10px;">
+                <li><strong>Single Line:</strong> 100 × Level</li>
+                <li><strong>Double Lines:</strong> 300 × Level</li>
+                <li><strong>Triple Lines:</strong> 500 × Level</li>
+                <li><strong>Tetris (4 lines):</strong> 800 × Level</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>🏆 Recent Top Scores</h3>
+    <div id="recent-scores" style="margin-top: 20px;">
+        <p>Loading leaderboard...</p>
+    </div>
+    
+    <script>
+        // Load recent top scores
+        fetch('/api/leaderboard')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.scores.length > 0) {
+                    const scoresContainer = document.getElementById('recent-scores');
+                    let html = '<table style="width: 100%; border-collapse: collapse;">';
+                    html += '<tr style="background: #f0f0f0;"><th style="padding: 10px; border: 1px solid #ddd;">Rank</th><th style="padding: 10px; border: 1px solid #ddd;">Player</th><th style="padding: 10px; border: 1px solid #ddd;">Score</th><th style="padding: 10px; border: 1px solid #ddd;">Lines</th><th style="padding: 10px; border: 1px solid #ddd;">Level</th></tr>';
+                    
+                    data.scores.slice(0, 5).forEach((score, index) => {
+                        html += `<tr><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${index + 1}</td><td style="padding: 10px; border: 1px solid #ddd;">${score.username}</td><td style="padding: 10px; border: 1px solid #ddd; text-align: right;">${score.score.toLocaleString()}</td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${score.lines_cleared}</td><td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${score.level_reached}</td></tr>`;
+                    });
+                    
+                    html += '</table>';
+                    html += '<div style="text-align: center; margin-top: 15px;"><a href="#" onclick="showLeaderboard()" style="color: #667eea; text-decoration: none;">View Full Leaderboard →</a></div>';
+                    scoresContainer.innerHTML = html;
+                } else {
+                    document.getElementById('recent-scores').innerHTML = '<p style="text-align: center; color: #666;">No scores yet. Be the first to play!</p>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('recent-scores').innerHTML = '<p style="color: #f44336;">Failed to load leaderboard.</p>';
+            });
+    </script>
+</div>
+{% endblock %}
