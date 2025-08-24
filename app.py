@@ -5,9 +5,8 @@ A full-featured Tetris game with user authentication, scoring, and database inte
 """
 
 import os
-import json
 import random
-from datetime import datetime, timedelta
+from datetime import datetime
 from functools import wraps
 
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
@@ -491,10 +490,10 @@ def end_game():
         
         return jsonify({
             'success': True,
-            'final_score': game.score,
-            'lines_cleared': game.lines_cleared,
-            'level': game.level,
-            'time_played': time_played
+            'final_score': int(game.score),
+            'lines_cleared': int(game.lines_cleared),
+            'level': int(game.level),
+            'time_played': int(time_played)
         })
         
     except Exception as e:
