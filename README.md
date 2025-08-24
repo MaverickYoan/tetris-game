@@ -209,18 +209,18 @@ CREATE TABLE high_scores (
    - **Port**: 5432
    - **Username**: tetris_user
    - **Password**: tetris_password
-
-### Common Database Operations
+   
+### Opérations de base de données communes
 - **View Tables**: Navigate to Servers → Tetris Database → Databases → tetris_db → Schemas → public → Tables
 - **Query Data**: Use the Query Tool to run SQL commands
 - **Monitor Performance**: Check server activity and statistics
 - **Backup/Restore**: Use built-in backup and restore functions
 
-## 🐛 Troubleshooting
+## 🐛 Dépannage
 
-### Common Issues
+### Problèmes communs
 
-#### Port Conflicts
+#### Conflits portuaires
 If ports 5000 or 5050 are in use:
 ```bash
 # Check what's using the port
@@ -231,7 +231,7 @@ ports:
   - "5001:5000"  # Use port 5001 instead
 ```
 
-#### Database Connection Issues
+#### Problèmes de connexion de la base de données
 ```bash
 # Check container logs
 docker-compose logs postgres
@@ -241,7 +241,7 @@ docker-compose logs flask_app
 docker-compose restart postgres flask_app
 ```
 
-#### Permission Issues
+#### Problèmes d'autorisation
 ```bash
 # On Linux/Mac, ensure proper permissions
 sudo chown -R $USER:$USER .
@@ -250,23 +250,21 @@ sudo chown -R $USER:$USER .
 docker-compose down -v
 docker-compose up -d
 ```
-
-### Performance Optimization
+### Optimisation des performances
 - **Database Indexing**: Indexes are automatically created on frequently queried columns
 - **Connection Pooling**: PostgreSQL handles connection pooling automatically  
 - **Static File Serving**: Consider using nginx for static files in production
 - **Caching**: Add Redis for session storage and caching in production
+## 🔒 Considérations de sécurité
 
-## 🔒 Security Considerations
-
-### Current Security Features
+### fonctionnalités de sécurité actuelles
 - **Password Hashing**: Werkzeug's secure password hashing
 - **Session Management**: Flask's secure session handling
 - **SQL Injection Prevention**: Parameterized queries with psycopg2
 - **CSRF Protection**: Built-in Flask protections
 - **Input Validation**: Server-side validation for all inputs
 
-### Production Security Checklist
+Liste de contrôle de sécurité de la production ###
 - [ ] Change default passwords
 - [ ] Use strong SECRET_KEY
 - [ ] Enable HTTPS
@@ -276,51 +274,49 @@ docker-compose up -d
 - [ ] Rate limiting implementation
 - [ ] Input sanitization review
 
-## 🤝 Contributing
-
+## 🤝 Contribution
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## 📝 Licence
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Ce projet est autorisé en vertu de la licence MIT - voir le fichier [licence] (licence) pour plus de détails.
+## 🙏 Remerciements
 
-## 🙏 Acknowledgments
+- Conception classique de jeu Tetris par Alexey Pajitnov
+- Framework Web Flask
+- Base de données PostgreSQL
+- conteneurisation Docker
+- outil de gestion de la base de données PGADMIN
 
-- Classic Tetris game design by Alexey Pajitnov
-- Flask web framework
-- PostgreSQL database
-- Docker containerization
-- pgAdmin database management tool
+## 📞 support
 
-## 📞 Support
+Si vous rencontrez des problèmes ou si vous avez des questions:
 
-If you encounter any issues or have questions:
+1. Vérifiez la section [Dépannage] (# - Dépannage)
+2. Regardez les problèmes de github existants
+3. Créez un nouveau problème avec des informations détaillées:
+- Système opérateur
+- Version Docker
+- Messages d'erreur
+- étapes pour reproduire
 
-1. Check the [Troubleshooting](#-troubleshooting) section
-2. Look through existing GitHub issues
-3. Create a new issue with detailed information:
-   - Operating system
-   - Docker version
-   - Error messages
-   - Steps to reproduce
+## 🚀 Améliorations futures
 
-## 🚀 Future Enhancements
-
-- [ ] Multiplayer support
-- [ ] Tournament system
-- [ ] Mobile app (React Native/Flutter)
-- [ ] Advanced statistics and analytics
-- [ ] Social features (friends, challenges)
-- [ ] Custom themes and skins
-- [ ] Sound effects and music
-- [ ] Spectator mode
-- [ ] Replay system
-- [ ] AI bot opponents
+- [] Support multijoueur
+- [] Système de tournoi
+- [] Application mobile (React Native / Flutter)
+- [] statistiques et analyses avancées
+- [] Caractéristiques sociales (amis, défis)
+- [] thèmes et skins personnalisés
+- [] effets sonores et musique
+- [] mode spectateur
+- [] Système de relecture
+- [] AI BOT APPOSONNES
 
 ---
 
-**Happy Gaming! 🎮** Start your Tetris journey and climb the leaderboards!
+** Joyeux jeu!🎮 ** Commencez votre voyage Tetris et montez les classements!
