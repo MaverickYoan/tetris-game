@@ -1,3 +1,17 @@
 {
-    
+  "name": "tetris-game",
+  "version": "1.0.0",
+  "description": "A modern, full-featured Tetris game built with Python Flask, PostgreSQL, and Docker.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.0.0",
+    "jquery": "^3.6.0"
+  },
+  "author": "MaverickYoan",
+  "license": "MIT"
 }
