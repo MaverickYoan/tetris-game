@@ -567,5 +567,26 @@ def user_stats():
     except Exception as e:
         return jsonify({'error': f'Failed to get stats: {str(e)}'}), 500
 
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    """Contact page and form submission."""
+    if request.method == 'POST':
+        data = request.get_json()
+        name = data.get('name')
+        email = data.get('email')
+        subject = data.get('subject')
+        message = data.get('message')
+
+        if not all([name, email, subject, message]):
+            return jsonify({'error': 'All fields are required'}), 400
+
+        # Here you would typically send an email, save to DB, etc.
+        # For this example, we'll just log it and return success.
+        print(f"New contact message from {name} ({email}) - Subject: {subject}\nMessage: {message}")
+
+        return jsonify({'success': True, 'message': 'Your message has been sent successfully!'})
+    
+    return render_template('contact.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
