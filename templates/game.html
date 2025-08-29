@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Play Tetris - Tetris Game{% endblock %}
+{% block title %}Jouez à Tetris - Tetris{% endblock %}
 
 {% block styles %}
 <style>
@@ -14,7 +14,7 @@
     
     .game-board-container {
         background: #000;
-        border: 3px solid #333;
+        border: 3px solid #c7ffc3ff;
         border-radius: 10px;
         position: relative;
         width: 300px;
@@ -37,8 +37,8 @@
     }
     
     .next-piece-container {
-        background: #f0f0f0;
-        border: 2px solid #ddd;
+        background: #13780aff;
+        border: 2px solid #00ff08ff;
         border-radius: 8px;
         padding: 15px;
         text-align: center;
@@ -46,7 +46,7 @@
     }
     
     #nextPieceCanvas {
-        background: #fff;
+        background: #bbeeb3ff;
         border-radius: 5px;
     }
     
@@ -82,7 +82,7 @@
         width: 100%;
         margin-bottom: 10px;
         padding: 12px;
-        background: #667eea;
+        background: #084514ff;
         color: white;
         border: none;
         border-radius: 8px;
@@ -92,7 +92,7 @@
     }
     
     .control-button:hover {
-        background: #5a6fd8;
+        background: #085420ff;
     }
     
     .control-button:disabled {
@@ -149,74 +149,74 @@
 {% block content %}
 <div class="game-container">
     <div class="game-info">
-        <h3>🎮 Game Stats</h3>
+        <h3>Statistiques de jeu</h3>
         <div class="score-item">
             <span class="score-label">Score:</span>
             <span id="score" class="score-value">0</span>
         </div>
         <div class="score-item">
-            <span class="score-label">Level:</span>
+            <span class="score-label">Niveau:</span>
             <span id="level" class="score-value">1</span>
         </div>
         <div class="score-item">
-            <span class="score-label">Lines:</span>
+            <span class="score-label">Lignes:</span>
             <span id="lines" class="score-value">0</span>
         </div>
         <div class="score-item">
-            <span class="score-label">Time:</span>
+            <span class="score-label">Temps:</span>
             <span id="time" class="score-value">00:00</span>
         </div>
         
         <div class="next-piece-container">
-            <h4>Next Piece</h4>
+            <h4>Prochaine Pièce</h4>
             <canvas id="nextPieceCanvas" width="80" height="80"></canvas>
         </div>
         
         <div id="instructions" style="margin-top: 20px; font-size: 14px; color: #666;">
-            <h4>Controls:</h4>
-            <p>← → Move left/right</p>
-            <p>↓ Soft drop</p>
-            <p>↑ Rotate</p>
-            <p>Space Hard drop</p>
-            <p>P Pause/Resume</p>
+            <h4>Contrôles:</h4>
+            <p>← → Déplacer gauche/droite</p>
+            <p>↓ Douce chute</p>
+            <p>↑ Rotation</p>
+            <p>Espace Chute dure</p>
+            <p>P Pause/Reprendre</p>
         </div>
     </div>
     
     <div class="game-board-container">
         <canvas id="gameCanvas" width="300" height="600"></canvas>
         <div id="gameOverOverlay" class="game-over-overlay">
-            <h2>Game Over! 💀</h2>
-            <p id="finalScore">Final Score: 0</p>
-            <button onclick="restartGame()" class="btn" style="margin-top: 20px;">Play Again</button>
+            <h2>Game Over</h2>
+            <p id="finalScore">Score final: 0</p>
+            <button onclick="restartGame()" class="btn" style="margin-top: 20px;">Rejouer</button>
         </div>
         <div id="pauseOverlay" class="pause-overlay">
             <div style="text-align: center;">
-                <h3>⏸️ PAUSED</h3>
-                <p>Press P to resume</p>
+                <h3>PAUSED</h3>
+                <p>Appuyez sur P pour reprendre</p>
             </div>
         </div>
     </div>
     
     <div class="controls">
-        <h3>🎮 Controls</h3>
+        <h3>Contrôles</h3>
         <button id="startButton" onclick="startGame()" class="control-button">
-            🚀 Start Game
+            Démarrer le jeu
         </button>
         <button id="pauseButton" onclick="togglePause()" class="control-button" disabled>
-            ⏸️ Pause
+            Pause
         </button>
         <button id="restartButton" onclick="restartGame()" class="control-button" disabled>
-            🔄 Restart
+            Rejouer
         </button>
-        
-        <h4 style="margin-top: 20px; margin-bottom: 10px;">Mobile Controls:</h4>
+
+        <h4 style="margin-top: 20px; margin-bottom: 10px;">Contrôles Mobiles:</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;">
             <button onclick="moveLeft()" class="control-button" style="margin: 0;">←</button>
             <button onclick="rotate()" class="control-button" style="margin: 0;">↻</button>
             <button onclick="moveRight()" class="control-button" style="margin: 0;">→</button>
         </div>
-        <button onclick="softDrop()" class="control-button" style="margin-top: 5px;">↓ Drop</button>
-        <button onclick="hardDrop()" class="control-button">⬇️ Hard Drop</button>
+        <button onclick="softDrop()" class="control-button" style="margin-top: 5px;">↓ Chute douce</button>
+        <button onclick="hardDrop()" class="control-button">Chute libre</button>
     </div>
 </div>
 
@@ -389,10 +389,10 @@ class TetrisGameUI {
         
         if (this.gamePaused) {
             pauseOverlay.style.display = 'flex';
-            pauseButton.textContent = '▶️ Resume';
+            pauseButton.textContent = 'Resume';
         } else {
             pauseOverlay.style.display = 'none';
-            pauseButton.textContent = '⏸️ Pause';
+            pauseButton.textContent = 'Pause';
         }
     }
     

@@ -12,8 +12,20 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP WITH TIME ZONE,
-    is_active BOOLEAN DEFAULT TRUE
+    is_active BOOLEAN DEFAULT TRUE,
+    role VARCHAR(50) DEFAULT 'admin'
 );
+
+CREATE TABLE administrateurs (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE
+);
+
+INSERT INTO administrateurs (first_name, last_name, email) VALUES
+('Yoan', 'yoan.demenezes@gmail.com'),
+('MaverickYoan', 'maverick.yoan@gmail.com'),
+('admin', 'admin@admin.com');
 
 -- High scores table to track player achievements
 CREATE TABLE high_scores (
@@ -51,6 +63,16 @@ CREATE TABLE user_stats (
     best_score INTEGER DEFAULT 0,
     best_level INTEGER DEFAULT 0,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des messages pour les soumissions de formulaire de contact
+CREATE TABLE IF NOT EXISTS messages (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    subject VARCHAR(200) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create indexes for better performance

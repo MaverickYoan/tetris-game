@@ -9,7 +9,7 @@ import random
 from datetime import datetime
 from functools import wraps
 
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 import psycopg2.extras
@@ -317,9 +317,11 @@ def register():
             
             # Create new user
             password_hash = generate_password_hash(password)
+            # Définir le rôle en fonction du nom d'utilisateur (admin si username == 'admin')
+            role = 'admin' if username.lower() == 'admin' else 'standard'
             cur.execute(
-                "INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s) RETURNING id",
-                (username, email, password_hash)
+                "INSERT INTO users (username, email, password_hash, role) VALUES (%s, %s, %s, %s) RETURNING id",
+                (username, email, password_hash, role)
             )
             user_id = cur.fetchone()['id']
             
@@ -569,24 +571,53 @@ def user_stats():
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    """Contact page and form submission."""
     if request.method == 'POST':
         data = request.get_json()
         name = data.get('name')
         email = data.get('email')
         subject = data.get('subject')
         message = data.get('message')
-
         if not all([name, email, subject, message]):
             return jsonify({'error': 'All fields are required'}), 400
-
-        # Here you would typically send an email, save to DB, etc.
-        # For this example, we'll just log it and return success.
-        print(f"New contact message from {name} ({email}) - Subject: {subject}\nMessage: {message}")
-
-        return jsonify({'success': True, 'message': 'Your message has been sent successfully!'})
-    
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute(
+                "INSERT INTO messages (name, email, subject, message) VALUES (%s, %s, %s, %s)",
+                (name, email, subject, message)
+            )
+            conn.commit()
+            cur.close()
+            conn.close()
+            return jsonify({'success': True, 'message': 'Your message has been sent successfully!'})
+        except Exception as e:
+            return jsonify({'error': f'Failed to send message: {str(e)}'}), 500
     return render_template('contact.html')
+
+@app.route('/admin/messages')
+def admin_messages():
+    # Check if the user is admin
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        # Check user role
+        cur.execute("SELECT role FROM users WHERE id = %s", (session['user_id'],))
+        user = cur.fetchone()
+        if not user or user['role'] != 'admin':
+            cur.close()
+            conn.close()
+            return redirect(url_for('login'))
+        # Fetch messages
+        cur.execute("SELECT id, name, email, subject, message, created_at FROM messages ORDER BY created_at DESC")
+        messages = cur.fetchall()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(f"Error fetching messages: {e}")
+        messages = []
+    return render_template('admin_messages.html', messages=messages)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
